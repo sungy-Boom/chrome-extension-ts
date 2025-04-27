@@ -1,0 +1,81 @@
+/* .json-line {
+    display: block;
+    margin: 2px 10px;
+    font-family: monospace;
+} */
+
+.line-number {
+    display: inline-block;
+    width: 30px;
+    color: #6394f6;
+    text-align: right;
+    user-select: none;
+    padding-right: 8px;
+}
+
+/* .json-key {
+    color: #0070f3;
+    font-weight: bold;
+}
+
+.json-value-string {
+    color: #d45079;
+}
+
+.json-value-number {
+    color: #42b883;
+}
+
+.json-value-boolean {
+    color: #fca130;
+}
+
+.json-value-null {
+    color: #ff5656;
+}
+
+.json-value-array {
+    color: #6A5ACD;
+}
+
+.json-value-object {
+    color: #4682B4;
+} */
+
+.json-error {
+    color: red;
+    font-weight: bold;
+}
+
+
+.toggle-btn, .ti, .ti-square-rounded-minus {
+    cursor: pointer;
+}
+
+
+.json-collapsible {
+    cursor: pointer;
+}
+
+.json-collapsible > .toggle-btn {
+    margin-right: 4px;
+    cursor: pointer;
+}
+
+.json-collapsible.collapsed > .toggle-btn {
+    transform: rotate(-90deg);
+}
+
+.json-collapsible.collapsed > br,
+.json-collapsible.collapsed > .line-number + br {
+    display: none;
+}
+
+.json-collapsible.collapsed > *:not(.toggle-btn):not(span:first-child) {
+    display: none;
+}
+
+.selected {
+    background-color: #44f600; /* 你可以选择任意颜色 */
+    color: white; /* 如果需要，还可以改变文本颜色 */
+}

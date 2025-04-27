@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "My Chrome Extension",
+  "version": "1.0",
+  "background": {
+    "service_worker": "dist/background.js"
+  },
+  "icons": {
+    "16": "src/asserts/imgs/favicon_16.png",
+    "36": "src/asserts/imgs/favicon_36.png",
+    "48": "src/asserts/imgs/favicon_48.png",
+    "128": "src/asserts/imgs/favicon_128.png"
+  },
+  "action": {},
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["dist/content.js"]
+    }
+  ],
+  "permissions": [
+    "activeTab"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  }
+}

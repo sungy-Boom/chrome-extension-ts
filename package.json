@@ -1,0 +1,27 @@
+{
+  "name": "my-chrome-extension",
+  "version": "1.0.0",
+  "description": "A Chrome extension powered by Rust and built with Webpack.",
+  "main": "dist/background.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "dev": "webpack --mode development --watch",
+    "lint": "eslint src --ext .ts"
+  },
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "css-loader": "^5.2.7",
+    "style-loader": "^3.3.4",
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.8.3",
+    "webpack": "^5.99.5",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "copy-webpack-plugin": "^13.0.0",
+    "eslint": "^9.24.0",
+    "html-webpack-plugin": "^5.6.3",
+    "jsoneditor": "^10.0.0"
+  }
+}

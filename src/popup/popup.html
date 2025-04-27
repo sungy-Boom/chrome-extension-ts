@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JSON处理</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Language" content="zh-cn"/>
+    <link rel="stylesheet" type="text/css" href="./style/popup.css">
+    <link rel="stylesheet" type="text/css" href="./style/jsonformat.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="button-container">
+        <button id="format">格式化</button>
+        <button id="compress">压缩</button>
+        <button id="escape">转义</button>
+        <button id="unescape">去除转义</button>
+        <button id="selectDiffMode">JSON 对比</button>
+    </div>
+
+    <div id="message" style="display: none; color: red;"></div>
+    <div class="editor-container">
+        <div style="display: flex; width: 100%">
+            <!-- 默认显示单输入框模式 -->
+            <div id="singleInputMode" style="display: flex; width: 100%">
+                <textarea class="json-input" id="jsonInput" placeholder="输入 JSON"
+                          style="width: 50%;margin-right: 2%"></textarea>
+                <div id="jsonResult"></div>
+            </div>
+
+            <!-- 对比模式下的双输入框 (初始隐藏) -->
+            <div id="diffMode" style="display: none; width: 100%">
+                <textarea class="json-input" id="jsonInputLeft" placeholder="左侧 JSON"
+                          style="width: 48%; margin-right: 2%"></textarea>
+                <textarea class="json-input" id="jsonInputRight" placeholder="右侧 JSON"
+                          style="width: 48%; margin-left: 2%"></textarea>
+            </div>
+        </div>
+
+        <!--        <div style="display: flex; width: 100%">-->
+        <!--            <textarea class="json-input" id="jsonInput" placeholder="输入 JSON"-->
+        <!--                      style="width: 50%;margin-right: 2%"></textarea>-->
+        <!--            <div id="jsonResult" style="width: 50%;margin-right: 2%; overflow: auto; border: 1px solid #ccc;"></div>-->
+        <!--        </div>-->
+    </div>
+    <!--    <div id="message" style="color: red; display: none;"></div>-->
+</div>
+
+<script type="module" src="../../dist/popup.js"></script>
+</body>
+</html>
