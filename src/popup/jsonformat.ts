@@ -1,5 +1,12 @@
 import {DOMElements} from '../basic/domgen'
-import {compressJson, escapeJson, formatWithHighlight, isValidJson, unescapeJson} from "../util/jsonUtil";
+import {
+    compressJson,
+    escapeJson,
+    formatWithHighlight,
+    formatWithHighlightV3,
+    isValidJson,
+    unescapeJson
+} from "../util/jsonUtil";
 
 enum ButtonSelectStatus {
     FORMAT = 0, //格式化
@@ -8,6 +15,8 @@ enum ButtonSelectStatus {
     UNESCAPE = 3, //去除转义
     DIFF = 4, //json对比
 }
+
+type DiffType = 'add' | 'delete' | 'change';
 
 export class JsonHandle {
     public domc: DOMElements;
@@ -70,7 +79,6 @@ export class JsonHandle {
         // 切换到对比模式
         this.domc.singleInputMode.style.display = 'none';
         this.domc.diffMode.style.display = 'flex';
-        this.domc.selectDiffModeButton.textContent = '退出对比';
         // 如果有原始内容，复制到左侧输入框
         this.domc.jsonInputLeft.value = this.domc.jsonInput.value;
 
@@ -93,7 +101,8 @@ export class JsonHandle {
             }
             switch (this.diffStatus) {
                 case ButtonSelectStatus.FORMAT:
-                    this.domc.jsonResult.innerHTML = formatWithHighlight(json);
+                    this.domc.jsonResult.innerHTML = formatWithHighlightV3(json);
+                    // this.domc.jsonResult.innerHTML = formatWithHighlight(json);
                     // 确保在 DOM 更新后设置折叠处理器
                     setTimeout(() => this.setupCollapsibleHandlers(), 0);
                     break;
@@ -176,64 +185,81 @@ export class JsonHandle {
         let rightHtml = '';
 
         try {
-            const leftJson = JSON.stringify(JSON.parse(left), null, 1);
-            const rightJson = JSON.stringify(JSON.parse(right), null, 1);
+            const leftJson = JSON.parse(left);
+            const rightJson = JSON.parse(right);
 
-            leftHtml = this.diffJson(leftJson, rightJson, 'left');
-            rightHtml = this.diffJson(leftJson, rightJson, 'right');
+            // 1. 生成左右 diff map
+            const leftMap = new Map<string, DiffType>();
+            const rightMap = new Map<string, DiffType>();
+            this.diffJsonMap(leftJson, rightJson, leftMap);   // 以左为基础
+            this.diffJsonMap(rightJson, leftJson, rightMap);  // 以右为基础
+            // 2. 渲染
+            leftHtml = this.renderJsonWithDiff(leftJson, leftMap);
+            rightHtml = this.renderJsonWithDiff(rightJson, rightMap);
         } catch (e) {
             leftHtml = '<span style="color:red;">JSON格式错误</span>';
             rightHtml = '<span style="color:red;">JSON格式错误</span>';
         }
-        console.log(leftHtml);
+
         this.domc.jsonInputLeft.innerHTML = leftHtml;
         this.domc.jsonInputRight.innerHTML = rightHtml;
     }
 
-    /**
-     * 递归对比两个json，生成带颜色的html
-     * @param left 左侧json
-     * @param right 右侧json
-     * @param side 'left' | 'right'
-     */
-    private diffJson(left: any, right: any, side: 'left' | 'right'): string {
-        if (typeof left !== 'object' || left === null || typeof right !== 'object' || right === null) {
-            if (left === right) {
-                return `<span>${JSON.stringify(side === 'left' ? left : right)}</span>`;
+    private diffJsonMap(
+        base: any,
+        compare: any,
+        map: Map<string, DiffType>,
+        path: string = ''
+    ) {
+        if (typeof base !== 'object' || base === null) return;
+        if (typeof compare !== 'object' || compare === null) compare = {};
+
+        const baseKeys = Object.keys(base);
+        const compareKeys = Object.keys(compare);
+
+        for (const key of baseKeys) {
+            const fullPath = path ? `${path}.${key}` : key;
+            if (!(key in compare)) {
+                map.set(fullPath, 'delete');
             } else {
-                // value不一致
-                return `<span class="value-diff" style="background:yellow;">${JSON.stringify(side === 'left' ? left : right)}</span>`;
+                const baseVal = base[key];
+                const compareVal = compare[key];
+                if (typeof baseVal === 'object' && typeof compareVal === 'object' && baseVal && compareVal) {
+                    this.diffJsonMap(baseVal, compareVal, map, fullPath);
+                } else if (JSON.stringify(baseVal) !== JSON.stringify(compareVal)) {
+                    map.set(fullPath, 'change');
+                }
             }
         }
-
-        const keys = new Set([...Object.keys(left || {}), ...Object.keys(right || {})]);
-        console.log(keys);
-        let html = '{<br>';
-        for (const key of keys) {
-            const l = left ? left[key] : undefined;
-            const r = right ? right[key] : undefined;
-
-            if (!(key in left)) {
-                // 新增字段
-                if (side === 'right') {
-                    html += `<span class="value-add" style="background:lightgreen;">"${key}": ${this.diffJson(l, r, side)}</span>,<br>`;
-                }
-            } else if (!(key in right)) {
-                // 删除字段
-                if (side === 'left') {
-                    html += `<span class="value-deleted" style="background:#ffb3b3;">"${key}": ${this.diffJson(l, r, side)}</span>,<br>`;
-                }
-            } else {
-                // key都存在
-                const valueHtml = this.diffJson(l, r, side);
-                if (typeof l === 'object' && typeof r === 'object') {
-                    html += `"${key}": ${valueHtml},<br>`;
-                } else if (l !== r) {
-                    html += `<span style="background:yellow;">"${key}": ${valueHtml}</span>,<br>`;
-                } else {
-                    html += `"${key}": ${valueHtml},<br>`;
-                }
+        for (const key of compareKeys) {
+            const fullPath = path ? `${path}.${key}` : key;
+            if (!(key in base)) {
+                map.set(fullPath, 'add');
             }
+        }
+    }
+
+    private renderJsonWithDiff(
+        obj: any,
+        diffMap: Map<string, DiffType>,
+        path: string = ''
+    ): string {
+        if (typeof obj !== 'object' || obj === null) {
+            return JSON.stringify(obj);
+        }
+        let html = '{<br>';
+        const keys = Object.keys(obj);
+        for (const key of keys) {
+            const fullPath = path ? `${path}.${key}` : key;
+            let valueHtml = this.renderJsonWithDiff(obj[key], diffMap, fullPath);
+            let style = '';
+            if (diffMap.has(fullPath)) {
+                const type = diffMap.get(fullPath);
+                if (type === 'add') style = 'background:lightgreen;';
+                if (type === 'delete') style = 'background:#ffb3b3;';
+                if (type === 'change') style = 'background:yellow;';
+            }
+            html += `<span style="${style}">"${key}": ${valueHtml}</span>,<br>`;
         }
         html += '}';
         return html;

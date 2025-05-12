@@ -1,9 +1,3 @@
-/* .json-line {
-    display: block;
-    margin: 2px 10px;
-    font-family: monospace;
-} */
-
 .line-number {
     display: inline-block;
     width: 30px;
@@ -12,35 +6,6 @@
     user-select: none;
     padding-right: 8px;
 }
-
-/* .json-key {
-    color: #0070f3;
-    font-weight: bold;
-}
-
-.json-value-string {
-    color: #d45079;
-}
-
-.json-value-number {
-    color: #42b883;
-}
-
-.json-value-boolean {
-    color: #fca130;
-}
-
-.json-value-null {
-    color: #ff5656;
-}
-
-.json-value-array {
-    color: #6A5ACD;
-}
-
-.json-value-object {
-    color: #4682B4;
-} */
 
 .json-error {
     color: red;
@@ -73,9 +38,4 @@
 
 .json-collapsible.collapsed > *:not(.toggle-btn):not(span:first-child) {
     display: none;
-}
-
-.selected {
-    background-color: #44f600; /* 你可以选择任意颜色 */
-    color: white; /* 如果需要，还可以改变文本颜色 */
 }

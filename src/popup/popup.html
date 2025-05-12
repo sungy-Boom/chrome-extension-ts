@@ -22,28 +22,18 @@
     <div class="editor-container">
         <div style="display: flex; width: 100%">
             <!-- 默认显示单输入框模式 -->
-            <div id="singleInputMode" style="display: flex; width: 100%">
-                <textarea class="json-input" id="jsonInput" placeholder="输入 JSON"
-                          style="width: 50%;margin-right: 2%"></textarea>
+            <div id="singleInputMode">
+                <textarea class="json-input" id="jsonInput" placeholder="输入 JSON"></textarea>
                 <div id="jsonResult"></div>
             </div>
 
             <!-- 对比模式下的双输入框 (初始隐藏) -->
             <div id="diffMode" style="display: none; width: 100%">
-                <textarea class="json-input" id="jsonInputLeft" placeholder="左侧 JSON"
-                          style="width: 48%; margin-right: 2%"></textarea>
-                <textarea class="json-input" id="jsonInputRight" placeholder="右侧 JSON"
-                          style="width: 48%; margin-left: 2%"></textarea>
+                <textarea class="json-input" id="jsonInputLeft" placeholder="左侧 JSON"></textarea>
+                <textarea class="json-input" id="jsonInputRight" placeholder="右侧 JSON"></textarea>
             </div>
         </div>
-
-        <!--        <div style="display: flex; width: 100%">-->
-        <!--            <textarea class="json-input" id="jsonInput" placeholder="输入 JSON"-->
-        <!--                      style="width: 50%;margin-right: 2%"></textarea>-->
-        <!--            <div id="jsonResult" style="width: 50%;margin-right: 2%; overflow: auto; border: 1px solid #ccc;"></div>-->
-        <!--        </div>-->
     </div>
-    <!--    <div id="message" style="color: red; display: none;"></div>-->
 </div>
 
 <script type="module" src="../../dist/popup.js"></script>

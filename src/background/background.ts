@@ -5,7 +5,7 @@ chrome.action.onClicked.addListener(function (tab) {
     // chrome.tabs.create({"url":"popup/index.html", "selected":true});
     //打开弹窗
     chrome.windows.create({
-        url: "popup/index.html",
+        url: "src/popup/popup.html",
         type: "popup",
         width: 1024,
         height: 768,

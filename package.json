@@ -11,6 +11,7 @@
   "author": "Your Name",
   "license": "MIT",
   "devDependencies": {
+    "@types/chrome": "^0.0.317",
     "css-loader": "^5.2.7",
     "style-loader": "^3.3.4",
     "ts-loader": "^9.5.2",

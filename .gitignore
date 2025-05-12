@@ -18,3 +18,8 @@ out/
 # OS files
 .DS_Store
 Thumbs.db
+
+# IDE files
+.idea/
+*.sublime-workspace
+*.sublime-project
